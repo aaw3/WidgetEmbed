@@ -24,22 +24,16 @@ namespace WidgetEmbed
     {
         ReSize resize = new ReSize();
 
-        //public static Form2 f2Instance;
-
         public ChromiumWebBrowser browser;
 
         string defaultTitle = "Title (Middle Click)";
         public Form2(string websiteData, LoadType loadType)
         {
-            //f2Instance = this;
-
             widget.WidgetWebData = websiteData;
             widget.WidgetLoadType = loadType;
             
             InitializeComponent();
-            //this.SetStyle(ControlStyles.ResizeRedraw, true);
             InitBrowser();
-            //CefSharpSettings.SubprocessExitIfParentProcessClosed = true; //look into this
 
             this.Load += (s, eargs) =>
             {
@@ -48,20 +42,10 @@ namespace WidgetEmbed
                 SetWidgetTitle(defaultTitle);
             };
 
-
-            //this.HandleCreated += (s, eargs) => { widget.Title = defaultTitle; };
-            
-
-
-
-            //this.FormBorderStyle = FormBorderStyle.None; // no borders
-            //this.DoubleBuffered = true;
-            //this.SetStyle(ControlStyles.ResizeRedraw, true); // this is to avoid visual artifacts
         }
 
         public Form2(string websiteData, LoadType loadType, Size widgetSize, Point widgetLocation, double zoomScale, string widgetTitle)
         {
-            //f2Instance = this;
 
             widget.WidgetWebData = websiteData;
             widget.WidgetLoadType = loadType;
@@ -73,18 +57,6 @@ namespace WidgetEmbed
             InitBrowser();
 
             SetWidgetTitle(widgetTitle);
-
-            //this.HandleCreated += (s, eargs) =>
-            //{
-
-            //    if (!(widgetTitle.Length == 0))
-            //        widget.Title = widgetTitle;
-            //    else
-            //        widget.Title = defaultTitle;
-            //};
-
-
-            
         }
 
         public enum LoadType
@@ -125,22 +97,6 @@ namespace WidgetEmbed
                 else if (widget.WidgetLoadType == LoadType.WebsiteURL)
                     browser.Load(widget.WidgetWebData);
 
-                //this.WindowState = FormWindowState.Normal;
-                //this.StartPosition = FormStartPosition.Manual;
-                //if (!(widget.WidgetLocation == default)) //(interferes at 0,0
-
-                //if (Form1.ScreenBoundsDetection)
-                //{
-                //    if (!((widget.WidgetLocation.X < 0 || widget.WidgetLocation.Y < 0) /*|| (widget.WidgetLocation.X > Form1.PrimaryScreen.Bounds.X - 25 || widget.WidgetLocation.Y > Form1.PrimaryScreen.Bounds.Y - 25)*/))
-                //        this.Invoke(new Action(() => this.Location = widget.WidgetLocation));
-                //    else
-                //    {
-                //        widget.WidgetLocation.X = widget.WidgetLocation.X < 0 ? 0 : widget.WidgetLocation.X;
-                //        widget.WidgetLocation.Y = widget.WidgetLocation.Y < 0 ? 0 : widget.WidgetLocation.Y;
-                //        this.Invoke(new Action(() => this.Location = widget.WidgetLocation));
-                //    }
-                //}
-
                 this.Invoke(new Action(() => this.Location = widget.WidgetLocation));
 
                 if (!(widget.WidgetWindowSize == default))
@@ -149,20 +105,17 @@ namespace WidgetEmbed
 
                 this.Move += (sender, eargs) =>
                 {
-                    //MessageBox.Show("LOCATION CHANGED");
                     widget.WidgetLocation = this.Location;
                 };
 
                 this.SizeChanged += (sender, eargs) =>
                 {
-                    //MessageBox.Show("SIZE CHANGED");
                     widget.WidgetWindowSize = this.Size;
                 };
 
                 if (!(widget.WidgetZoomScale == 0))
                 browser.LoadingStateChanged += (sender, eargs) =>
                 {
-                    //MessageBox.Show("IS LOADED");
                     if (!eargs.IsLoading)
                         if (waitingToSetZoom)
                         {
@@ -173,65 +126,10 @@ namespace WidgetEmbed
             };
 
 
-
-
-            #region garbage
-            //browser.Load(Embed);
-            //browser.LoadingStateChanged += async (s, e) =>
-            //{
-            //    //MessageBox.Show("Loading State Changed is current disabled for development purposes. (by dev)");
-            //    //MessageBox.Show("MAINFRAME URL: " + e.Browser.MainFrame.Url);
-
-
-            //    //e.Browser.StopLoad
-
-            //    if (!e.IsLoading)
-            //    {
-            //        if (ignoreLinkLoadingStateChanged)
-            //        {
-            //            ignoreLinkLoadingStateChanged = false;
-            //            return;
-            //        }
-
-            //        string script = "(function() { var body = document.body, html = document.documentElement; return  Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight ); })();";
-            //        await Task.Delay(5000);
-
-            //        var taskResult = browser.EvaluateScriptAsync(script);
-
-
-            //        //Task t = new Task(() => browser.EvaluateScriptAsync(script));
-            //        //t.ContinueWith((task) =>
-            //        //{
-            //        //    //MessageBox.Show("asdf");
-            //        //    if (!task.IsFaulted)
-            //        //    {
-            //        //        var response = task as Task<JavascriptResponse>;
-            //        //        var result = response.Result;
-
-            //        //        if (result.Success && response.Result != null)
-            //        //        {
-            //        //            taskResult = response.Result.ToString();
-            //        //        }
-            //        //    }
-            //        //});
-            //        //var height = t as Task<JavascriptResponse>;
-            //        //MessageBox.Show(height.Result.Result.ToString());
-            //        MessageBox.Show((dynamic)taskResult.Result.Message); //finish this tomorrow. trying to get height so then i can get width and make the sizes be predefined! (use:https://stackoverflow.com/questions/60435891/how-to-get-html-document-height-using-cefsharp)
-            //    }
-            //};
-
-            //browser.Click += (s, e) =>
-            //{
-
-            //};
-
-            #endregion
-
             this.panel1.Controls.Add(browser);
             browser.Dock = DockStyle.Fill;
 
             this.ShowInTaskbar = false;
-            //browser.Dock = DockStyle.Fill;
         }
 
         public async void UpdateTitle()
@@ -243,8 +141,6 @@ namespace WidgetEmbed
 
             if (Title.Length == 0)
                 MessageBox.Show(new Form { TopMost = true }, "Title rename has been cancelled", "Rename Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //else if (Title.Length > 32)
-            //    MessageBox.Show(new Form { TopMost = true }, "Title is too long!", "Title Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
                 SetWidgetTitle(Title);
@@ -253,8 +149,6 @@ namespace WidgetEmbed
 
                 return;
             }
-
-            //UpdateTitle();
         }
 
         public void SetWidgetTitle(string Title)
@@ -316,7 +210,6 @@ namespace WidgetEmbed
             get
             {
                 CreateParams cp = base.CreateParams;
-                // turn on WS_EX_TOOLWINDOW style bit
                 cp.ExStyle |= 0x80;
                 return cp;
             }
@@ -324,21 +217,6 @@ namespace WidgetEmbed
 
         protected override void WndProc(ref Message m)
         {
-            //if (m.Msg == 0x84)
-            //{  // Trap WM_NCHITTEST
-            //    Point pos = new Point(m.LParam.ToInt32());
-            //    pos = this.PointToClient(pos);
-            //    if (pos.Y < cCaption)
-            //    {
-            //        m.Result = (IntPtr)2;  // HTCAPTION
-            //        return;
-            //    }
-            //    if (pos.X >= this.ClientSize.Width - cGrip && pos.Y >= this.ClientSize.Height - cGrip)
-            //    {
-            //        m.Result = (IntPtr)17; // HTBOTTOMRIGHT
-            //        return;
-            //    }
-            //}
 
             int x = (int)(m.LParam.ToInt64() & 0xFFFF);               //get x mouse position
             int y = (int)((m.LParam.ToInt64() & 0xFFFF0000) >> 16);   //get y mouse position  you can gave (x,y) it from "MouseEventArgs" too
@@ -419,12 +297,6 @@ namespace WidgetEmbed
                 SetDefaultButtonDesign(btn);
             }
 
-            //webBrowser1.ScriptErrorsSuppressed = true;
-            //webBrowser1.ScrollBarsEnabled = false;
-            //webBrowser1.DocumentText = Embed;
-
-
-
             this.FormClosing += (s, eargs) =>
             {
                 if (deletingWidget)
@@ -470,66 +342,6 @@ namespace WidgetEmbed
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
 
-
-
-
-
-
-
-        //private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        //{
-        //    string tagUpper = "";
-
-        //    foreach (HtmlElement tag in (sender as WebBrowser).Document.All)
-        //    {
-        //        tagUpper = tag.TagName.ToUpper();
-
-        //        if ((tagUpper == "AREA") || (tagUpper == "A"))
-        //        {
-        //            tag.MouseUp += new HtmlElementEventHandler(this.link_MouseUp);
-        //        }
-        //    }
-        //}
-
-        //void link_MouseUp(object sender, HtmlElementEventArgs e)
-        //{
-        //    Regex pattern = new Regex("href=\\\"(.+?)\\\"");
-        //    Match match = pattern.Match((sender as HtmlElement).OuterHtml);
-        //    string link = match.Groups[1].Value;
-
-        //    //Process.Start(link);
-        //    Debug.WriteLine("MOUSE UP: " + link);
-        //}
-
-
-        //private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        //{
-        //    Debug.WriteLine("COMPLETED");
-
-
-        //    //this.Width = webBrowser1.Document.Window.Size.Width + 40;
-        //    //this.Height = webBrowser1.Document.Window.Size.Height + 40;
-
-        //    //this.Width = webBrowser1.Document.Body.ScrollRectangle.Width + 40;//Border
-        //    //this.Height = webBrowser1.Document.Body.ScrollRectangle.Height + 40;//Border
-
-        //    //If the control is not docked
-        //    //webBrowser1.Size = webBrowser1.Document.Body.ScrollRectangle.Size;
-        //}
-
-        //private void webBrowser1_NewWindow(object sender, CancelEventArgs e)
-        //{
-        //    Debug.WriteLine("NEW WINDOW");
-        //    e.Cancel = true;
-
-        //    var webbrowser = (WebBrowser)sender;
-        //    //OpenWebsite(webbrowser.StatusText.ToString());
-        //    //Debug.WriteLine(webBrowser1.StatusText.ToString());
-        //    //Process.Start(webBrowser1.StatusText.ToString());
-        //    webbrowser = null;
-
-        //}
-
         public class BrowserLifeSpanHandler : ILifeSpanHandler
         {
 
@@ -556,11 +368,8 @@ namespace WidgetEmbed
 
                 if (dr == DialogResult.Yes)
                     Process.Start(targetUrl);
-                //MessageBox.Show("User Clicked:" + targetUrl);
 
                 return true;
-
-                //return false;
             }
 
 
@@ -575,12 +384,7 @@ namespace WidgetEmbed
             {
                 ignoreLinkLoadingStateChanged = true;
 
-                //Open in Default browser
-                //MessageBox.Show("REQUEST TYPE: " + request.TransitionType.ToString());
-
-                ////if ()
-
-                if (/*!request.Url.StartsWith("file:") && */(request.Url.StartsWith("http") || request.Url.StartsWith("www")) && (request.TransitionType == TransitionType.ClientRedirect || request.TransitionType == TransitionType.LinkClicked))
+                if ((request.Url.StartsWith("http") || request.Url.StartsWith("www")) && (request.TransitionType == TransitionType.ClientRedirect || request.TransitionType == TransitionType.LinkClicked))
                 {
                     DialogResult dr = MessageBox.Show("Would you like to open this 'Link' in your browser?\n" + "\"" + request.Url + "\"", "Link Opening Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -588,7 +392,6 @@ namespace WidgetEmbed
                         Process.Start(request.Url);
 
                     return true;
-                    //return false;
                 }
                 return false;
 
@@ -596,14 +399,7 @@ namespace WidgetEmbed
 
             public bool OnOpenUrlFromTab(IWebBrowser browserControl, IBrowser browser, IFrame frame, string targetUrl, WindowOpenDisposition targetDisposition, bool userGesture)
             {
-                //MessageBox.Show("ON OPEN URL FROM TAB: " + userGesture.ToString());
-                //MessageBox.Show(targetUrl);
-                //if ((targetUrl.StartsWith("http") || targetUrl.StartsWith("www")))
-                //{
-                //    MessageBox.Show(targetUrl);
-                //    //System.Diagnostics.Process.Start(request.Url);
-                //    return true;
-                //}
+
                 return false;
             }
 
@@ -626,33 +422,7 @@ namespace WidgetEmbed
 
             public bool GetAuthCredentials(IWebBrowser chromiumWebBrowser, IBrowser browser, string originUrl, bool isProxy, string host, int port, string realm, string scheme, IAuthCallback callback)
             {
-                //NOTE: We also suggest you explicitly Dispose of the callback as it wraps an unmanaged resource.
 
-                //Example #1
-                //Spawn a Task to execute our callback and return true;
-                //Typical usage would see you invoke onto the UI thread to open a username/password dialog
-                //Then execute the callback with the response username/password
-                //You can cast the IWebBrowser param to ChromiumWebBrowser to easily access
-                //control, from there you can invoke onto the UI thread, should be in an async fashion
-                //Load https://httpbin.org/basic-auth/cefsharp/passwd in the browser to test
-                //Task.Run(() =>
-                //{
-                //    using (callback)
-                //    {
-                //        if (originUrl.Contains("https://httpbin.org/basic-auth/"))
-                //        {
-                //            var parts = originUrl.Split('/');
-                //            var username = parts[parts.Length - 2];
-                //            var password = parts[parts.Length - 1];
-                //            callback.Continue(username, password);
-                //        }
-                //    }
-                //});
-
-                //return true;
-
-                //Example #2
-                //Return false to cancel the request
                 callback.Dispose();
                 return false;
             }
